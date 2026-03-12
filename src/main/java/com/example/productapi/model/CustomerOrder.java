@@ -20,7 +20,7 @@ public class CustomerOrder {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "order_products",
         joinColumns = @JoinColumn(name = "order_id"),
