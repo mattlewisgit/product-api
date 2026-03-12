@@ -41,4 +41,40 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(response);
     }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleOrderNotFound(OrderNotFoundException ex) {
+        Map<String, Object> error = new HashMap<>();
+        error.put("timestamp", LocalDateTime.now());
+        error.put("status", HttpStatus.NOT_FOUND.value());
+        error.put("error", "Not Found");
+        error.put("message", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<Map<String, Object>> handleBadRequest(BadRequestException ex) {
+        Map<String, Object> error = new HashMap<>();
+        error.put("timestamp", LocalDateTime.now());
+        error.put("status", HttpStatus.BAD_REQUEST.value());
+        error.put("error", "Bad Request");
+        error.put("message", ex.getMessage());
+
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(org.springframework.orm.ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<Map<String, Object>> handleOptimisticLocking(
+        org.springframework.orm.ObjectOptimisticLockingFailureException ex) {
+        Map<String, Object> error = new HashMap<>();
+        error.put("timestamp", LocalDateTime.now());
+        error.put("status", HttpStatus.CONFLICT.value());
+        error.put("error", "Conflict");
+        error.put("message", "The record was modified by another transaction. Please retry.");
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+
 }

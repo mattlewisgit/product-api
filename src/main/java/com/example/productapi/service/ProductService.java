@@ -2,54 +2,54 @@ package com.example.productapi.service;
 
 import com.example.productapi.exception.ProductNotFoundException;
 import com.example.productapi.model.Product;
+import com.example.productapi.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
+@Transactional
 public class ProductService {
 
-    private final Map<Long, Product> productStore = new ConcurrentHashMap<>();
-    private final AtomicLong idGenerator = new AtomicLong(1);
+    private final ProductRepository productRepository;
 
-    public List<Product> getAllProducts() {
-        return new ArrayList<>(productStore.values());
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
+    @Transactional(readOnly = true)
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
     public Product getProductById(Long id) {
-        Product product = productStore.get(id);
-        if (product == null) {
-            throw new ProductNotFoundException("Product with id " + id + " not found");
-        }
-        return product;
+        return productRepository.findById(id)
+                   .orElseThrow(() -> new ProductNotFoundException("Product with id " + id + " not found"));
     }
 
     public Product createProduct(Product product) {
-        Long id = idGenerator.getAndIncrement();
-        product.setId(id);
-        productStore.put(id, product);
-        return product;
+        product.setId(null);
+        return productRepository.save(product);
     }
 
     public Product updateProduct(Long id, Product updatedProduct) {
-        if (!productStore.containsKey(id)) {
-            throw new ProductNotFoundException("Product with id " + id + " not found");
-        }
+        Product existingProduct = productRepository.findById(id)
+                                      .orElseThrow(() -> new ProductNotFoundException("Product with id " + id + " not found"));
 
-        updatedProduct.setId(id);
-        productStore.put(id, updatedProduct);
-        return updatedProduct;
+        existingProduct.setName(updatedProduct.getName());
+        existingProduct.setDescription(updatedProduct.getDescription());
+        existingProduct.setPrice(updatedProduct.getPrice());
+
+        return productRepository.save(existingProduct);
     }
 
     public void deleteProduct(Long id) {
-        if (!productStore.containsKey(id)) {
+        if (!productRepository.existsById(id)) {
             throw new ProductNotFoundException("Product with id " + id + " not found");
         }
 
-        productStore.remove(id);
+        productRepository.deleteById(id);
     }
 }
