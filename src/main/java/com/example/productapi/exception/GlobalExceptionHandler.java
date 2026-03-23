@@ -1,6 +1,8 @@
 package com.example.productapi.exception;
 
 import com.example.productapi.dto.ApiError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -16,8 +18,11 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ApiError> handleProductNotFound(ProductNotFoundException ex) {
+        log.warn("Handled ProductNotFoundException: {}", ex.getMessage());
         ApiError error = new ApiError(
             LocalDateTime.now(),
             HttpStatus.NOT_FOUND.value(),
@@ -25,12 +30,12 @@ public class GlobalExceptionHandler {
             ex.getMessage(),
             null
         );
-
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
     @ExceptionHandler(OrderNotFoundException.class)
     public ResponseEntity<ApiError> handleOrderNotFound(OrderNotFoundException ex) {
+        log.warn("Handled OrderNotFoundException: {}", ex.getMessage());
         ApiError error = new ApiError(
             LocalDateTime.now(),
             HttpStatus.NOT_FOUND.value(),
@@ -38,12 +43,12 @@ public class GlobalExceptionHandler {
             ex.getMessage(),
             null
         );
-
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ApiError> handleBadRequest(BadRequestException ex) {
+        log.warn("Handled BadRequestException: {}", ex.getMessage());
         ApiError error = new ApiError(
             LocalDateTime.now(),
             HttpStatus.BAD_REQUEST.value(),
@@ -51,7 +56,6 @@ public class GlobalExceptionHandler {
             ex.getMessage(),
             null
         );
-
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
@@ -62,6 +66,8 @@ public class GlobalExceptionHandler {
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
             validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
+
+        log.warn("Handled validation error: {}", validationErrors);
 
         ApiError error = new ApiError(
             LocalDateTime.now(),
@@ -76,6 +82,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
     public ResponseEntity<ApiError> handleOptimisticLocking(ObjectOptimisticLockingFailureException ex) {
+        log.warn("Handled optimistic locking failure: {}", ex.getMessage());
+
         ApiError error = new ApiError(
             LocalDateTime.now(),
             HttpStatus.CONFLICT.value(),
@@ -89,6 +97,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGenericException(Exception ex) {
+        log.error("Unhandled exception occurred", ex);
+
         ApiError error = new ApiError(
             LocalDateTime.now(),
             HttpStatus.INTERNAL_SERVER_ERROR.value(),
