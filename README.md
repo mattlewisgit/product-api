@@ -66,9 +66,19 @@ You should see a container named:
 ---
 ## 3. Build the Project
 
+Build the project
+
 ``` ./gradlew build```
 
 ---
+
+
+Build and run unit tests with coverage report
+
+``` ./gradlew clean test jacocoTestReport```
+
+---
+
 
 ## 4. Run the Application
 

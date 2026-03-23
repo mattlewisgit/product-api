@@ -1,5 +1,9 @@
 package com.example.productapi.controller;
 
+import com.example.productapi.dto.CreateProductRequest;
+import com.example.productapi.dto.ProductResponse;
+import com.example.productapi.dto.UpdateProductRequest;
+import com.example.productapi.mapper.ProductMapper;
 import com.example.productapi.model.Product;
 import com.example.productapi.service.ProductService;
 import jakarta.validation.Valid;
@@ -14,34 +18,47 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductMapper productMapper;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, ProductMapper productMapper) {
         this.productService = productService;
+        this.productMapper = productMapper;
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+        List<ProductResponse> responses = productService.getAllProducts()
+                                              .stream()
+                                              .map(productMapper::toResponse)
+                                              .toList();
+
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
+        Product product = productService.getProductById(id);
+        return ResponseEntity.ok(productMapper.toResponse(product));
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product) {
-        Product createdProduct = productService.createProduct(product);
+    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody CreateProductRequest request) {
+        Product product = productMapper.toEntity(request);
+        Product created = productService.createProduct(product);
+
         return ResponseEntity
-                   .created(URI.create("/api/products/" + createdProduct.getId()))
-                   .body(createdProduct);
+                   .created(URI.create("/api/products/" + created.getId()))
+                   .body(productMapper.toResponse(created));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id,
-        @Valid @RequestBody Product product) {
-        Product updatedProduct = productService.updateProduct(id, product);
-        return ResponseEntity.ok(updatedProduct);
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id,
+        @Valid @RequestBody UpdateProductRequest request) {
+        Product updatedValues = new Product();
+        productMapper.updateEntity(request, updatedValues);
+
+        Product updated = productService.updateProduct(id, updatedValues);
+        return ResponseEntity.ok(productMapper.toResponse(updated));
     }
 
     @DeleteMapping("/{id}")
