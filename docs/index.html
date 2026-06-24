@@ -1,18 +1,68 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Product API Documentation</title>
-    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist/swagger-ui.css">
+    <title>Product API Testing Task</title>
 </head>
 <body>
-<div id="swagger-ui"></div>
+<h1>Product API Testing Task</h1>
 
-<script src="https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js"></script>
-<script>
-    SwaggerUIBundle({
-      url: "./openapi.json",
-      dom_id: "#swagger-ui"
-    });
-</script>
+<p>
+    Swagger is available at:
+    <a href="https://product-api-k34h.onrender.com/swagger-ui/index.html#/" target="_blank">
+        https://product-api-k34h.onrender.com/swagger-ui/index.html#/
+    </a>
+</p>
+
+<h2>User Story</h2>
+
+<h3>Title: Product and Order API</h3>
+
+<p>
+    As a user, I want to create, view, update, and delete products, and create customer orders
+    containing products, so that I can manage a simple product ordering system through an API.
+</p>
+
+<h2>Acceptance Criteria</h2>
+
+<ul>
+    <li>Users can create a new product using POST /api/products</li>
+    <li>Users can retrieve all products using GET /api/products</li>
+    <li>Users can retrieve a single product using GET /api/products/{id}</li>
+    <li>Users can update an existing product using PUT /api/products/{id}</li>
+    <li>Users can delete a product using DELETE /api/products/{id}</li>
+    <li>Users can create an order containing one or more product IDs using POST /api/orders</li>
+    <li>Users can retrieve all orders using GET /api/orders</li>
+    <li>Users can retrieve a single order using GET /api/orders/{id}</li>
+    <li>Users can delete an order using DELETE /api/orders/{id}</li>
+    <li>The API should return appropriate responses for invalid or missing data</li>
+</ul>
+
+<h2>Testing Task</h2>
+
+<p>
+    Use Swagger UI to test the Product API endpoints. Create test products, update them,
+    retrieve them, delete them, and create customer orders using existing product IDs.
+</p>
+
+<h2>Suggested Test Ideas</h2>
+
+<ul>
+    <li>Create a product with valid name, description, and price</li>
+    <li>Create a product with a missing name</li>
+    <li>Create a product with a price of 0</li>
+    <li>Create a product with a negative price</li>
+    <li>Update an existing product</li>
+    <li>Try to update a product ID that does not exist</li>
+    <li>Delete a product and confirm it no longer appears</li>
+    <li>Create an order using valid product IDs</li>
+    <li>Create an order using an empty product ID list</li>
+    <li>Create an order using a product ID that does not exist</li>
+</ul>
+
+<h2>Known / Intended Bugs</h2>
+
+<ul>
+    <li>To be completed after testing.</li>
+</ul>
 </body>
 </html>
