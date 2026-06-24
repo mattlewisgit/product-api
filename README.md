@@ -177,3 +177,9 @@ spring.datasource.password=${SPRING_DATASOURCE_PASSWORD:postgres}
 
 
 Note: this is free on render.  it expires after 30 days
+
+
+- the school / college task as available at: https://mattlewisgit.github.io/product-api/
+
+- intended bugs:
+- 
