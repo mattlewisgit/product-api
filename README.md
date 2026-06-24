@@ -104,3 +104,73 @@ This interface allows you to:
 * GET /api/orders/{id}
 * POST /api/orders
 * DELETE /api/orders/{id}
+
+
+## Public Deployment (Render)
+
+The API is deployed publicly using Render and PostgreSQL.
+
+### Live Swagger Documentation
+
+Swagger UI:
+
+https://product-api-k34h.onrender.com/swagger-ui/index.html#/
+
+OpenAPI Specification:
+
+https://product-api-k34h.onrender.com/v3/api-docs
+
+### Accessing the Deployment
+
+1. Log in to Render
+2. Open the **product-api** Web Service
+3. View application logs under **Logs**
+4. Redeploy the latest version using:
+
+```text
+Manual Deploy → Deploy Latest Commit
+```
+
+### Database
+
+The application uses a managed PostgreSQL database hosted on Render.
+
+Database connection details are configured using environment variables:
+
+```text
+SPRING_DATASOURCE_URL
+SPRING_DATASOURCE_USERNAME
+SPRING_DATASOURCE_PASSWORD
+```
+
+### Updating the Application
+
+After making code changes:
+
+```bash
+git add .
+git commit -m "Description of changes"
+git push
+```
+
+Render will automatically deploy the latest commit from GitHub.
+
+If required, a manual deployment can be triggered from the Render dashboard.
+
+### Local Development vs Render
+
+Local development uses:
+
+```text
+jdbc:postgresql://localhost:5432/productdb
+```
+
+Render uses environment variables configured in the Web Service.
+
+The application automatically switches between local and cloud database connections using:
+
+```properties
+spring.datasource.url=${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/productdb}
+spring.datasource.username=${SPRING_DATASOURCE_USERNAME:postgres}
+spring.datasource.password=${SPRING_DATASOURCE_PASSWORD:postgres}
+```
