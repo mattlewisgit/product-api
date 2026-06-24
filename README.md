@@ -174,3 +174,6 @@ spring.datasource.url=${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/p
 spring.datasource.username=${SPRING_DATASOURCE_USERNAME:postgres}
 spring.datasource.password=${SPRING_DATASOURCE_PASSWORD:postgres}
 ```
+
+
+Note: this is free on render.  it expires after 30 days
