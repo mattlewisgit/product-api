@@ -181,5 +181,18 @@ Note: this is free on render.  it expires after 30 days
 
 - the school / college task as available at: https://mattlewisgit.github.io/product-api/
 
-- intended bugs:
-- 
+
+### Intended Bugs
+
+The API intentionally contains the following defects for testing practice:
+
+* Creating a product with a decimal price rounds the price down to the nearest whole number.
+* Updating a product does not update the product price.
+* Deleting a product that does not exist succeeds instead of returning an error.
+* Retrieving a product that does not exist returns a HTTP 500 Internal Server Error instead of a HTTP 404 Not Found.
+* Creating a product without a price is successful.
+* Creating a product with numbers or special characters in the product name returns an error.
+* Product names containing capital letters are automatically converted to lowercase.
+* Creating a product with price containing letters.
+* Name truncates to a maximum of 10 characters in length
+* ID field does not update if you give it a different ID.  It does not need to be part of the request

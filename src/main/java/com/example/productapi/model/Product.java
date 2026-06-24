@@ -2,9 +2,6 @@ package com.example.productapi.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.util.HashSet;
@@ -21,7 +18,6 @@ public class Product {
     @Version
     private Long version;
 
-    @NotBlank(message = "Name is required")
     @Size(max = 100, message = "Name must not exceed 100 characters")
     @Column(nullable = false, length = 100)
     private String name;
@@ -30,10 +26,8 @@ public class Product {
     @Column(length = 255)
     private String description;
 
-    @NotNull(message = "Price is required")
-    @DecimalMin(value = "0.01", message = "Price must be greater than 0")
-    @Column(nullable = false)
-    private Double price;
+    @Column(nullable = true)
+    private String price;
 
     @ManyToMany(mappedBy = "products")
     @JsonIgnore
@@ -42,7 +36,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long id, Long version, String name, String description, Double price) {
+    public Product(Long id, Long version, String name, String description, String price) {
         this.id = id;
         this.version = version;
         this.name = name;
@@ -66,7 +60,7 @@ public class Product {
         return description;
     }
 
-    public Double getPrice() {
+    public String getPrice() {
         return price;
     }
 
@@ -90,7 +84,7 @@ public class Product {
         this.description = description;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
